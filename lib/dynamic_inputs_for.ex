@@ -1,6 +1,12 @@
 defmodule DynamicInputsFor do
   @moduledoc """
-  Documentation for DynamicInputsFor.
+  Helpers to create HTML forms with nested fields that can be created and deleted dynamically from
+  the client.
+
+  The functions in this module extend the functionality of `Phoenix.HTML.Form.inputs_for/4` to
+  return the html of a form with nested fields grouped in HTML tags with a class called `fields` and
+  the necessary anchors to add javascript that allows to add more fields dynamically from the
+  client.
   """
 
   import Phoenix.HTML
@@ -8,13 +14,18 @@ defmodule DynamicInputsFor do
   import Phoenix.HTML.Tag
 
   @doc """
-  Hello world.
+  It works like `Phoenix.HTML.Form.inputs_for/4`, but it also returns an HTML tag with the
+  information needed to add and delete fields from the client. The template argument is used to
+  generate the new nested fields.
+  The `dynamic_button_to_add/3` function generates the button to add the fields.
 
-  ## Examples
+  ## Options
 
-      iex> DynamicInputsFor.hello()
-      :world
+    * `:wrapper_tag` - HTML tag name to wrap the fields.
 
+    * `:wrapper_attrs` - HTML attributes for the wrapper.
+
+  See `Phoenix.HTML.Form.inputs_for/4` for other options.
   """
   def dynamic_inputs_for(form, association, template, options \\ [], fun)
       when is_atom(association) or is_binary(association) do
@@ -56,6 +67,9 @@ defmodule DynamicInputsFor do
     ]
   end
 
+  @doc """
+  Creates a button to add more nested fields to the fields generated with `dynamic_inputs_for/4`.
+  """
   def dynamic_button_to_add(association, content)
       when is_atom(association) or is_binary(association) do
     dynamic_button_to_add(association, content, [])

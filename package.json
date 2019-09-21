@@ -1,0 +1,16 @@
+{
+  "name": "dynamic_inputs_for",
+  "version": "0.1.0",
+  "description": "** TODO: Add description **",
+  "main": "./priv/static/dynamic_inputs_for.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MamesPalmero/dynamic_inputs_for.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MamesPalmero/dynamic_inputs_for/issues"
+  },
+  "homepage": "https://github.com/MamesPalmero/dynamic_inputs_for#readme"
+}

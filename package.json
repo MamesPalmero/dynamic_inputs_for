@@ -12,5 +12,12 @@
   "bugs": {
     "url": "https://github.com/MamesPalmero/dynamic_inputs_for/issues"
   },
-  "homepage": "https://github.com/MamesPalmero/dynamic_inputs_for#readme"
+  "homepage": "https://github.com/MamesPalmero/dynamic_inputs_for#readme",
+  "scripts": {
+    "format": "prettier-eslint --write 'priv/static/*.js'"
+  },
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "prettier-eslint-cli": "^5.0.0"
+  }
 }

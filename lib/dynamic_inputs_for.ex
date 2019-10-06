@@ -25,16 +25,21 @@ defmodule DynamicInputsFor do
 
     * `:wrapper_attrs` - HTML attributes for the wrapper.
 
+    * `:only_mark_deleted` - create an input called `delete` with `"true"` value and add the
+      `deleted-fields` class to the wrapper to choose how to handle after validation errors. By
+      default when a group of nested inputs is deleted the content is deleted, to avoid HTML
+      validations, it is hidden and the input called `delete` with `"true"` value is created.
+
   See `Phoenix.HTML.Form.inputs_for/4` for other options.
   """
   def dynamic_inputs_for(form, association, template, options \\ [], fun)
       when is_atom(association) or is_binary(association) do
     {wrapper_attrs, options} = Keyword.pop(options, :wrapper_attrs, [])
-    {wrapper_class, wrapper_attrs} = Keyword.pop(wrapper_attrs, :class, "")
     {wrapper_tag, options} = Keyword.pop(options, :wrapper_tag, :div)
+    {only_mark_deleted, options} = Keyword.pop(options, :only_mark_deleted, false)
 
-    wrapper_attrs =
-      Keyword.merge(wrapper_attrs, data_assoc: association, class: "fields " <> wrapper_class)
+    wrapper_attrs = Keyword.update(wrapper_attrs, :class, "fields", &("fields " <> &1))
+    wrapper_attrs = Keyword.put(wrapper_attrs, :data_assoc, association)
 
     # Remove the parameters of the form to force that the prepended values are always rendered
     form_template =
@@ -54,24 +59,51 @@ defmodule DynamicInputsFor do
     [
       inputs_for(form, association, options, fn form_assoc ->
         wrapper_attrs = Keyword.put(wrapper_attrs, :data_assoc_index, form_assoc.index)
-
-        if form_assoc.params["delete"] == "true" do
-          wrapper_attrs = Keyword.put(wrapper_attrs, :style, "display: none;")
-          hidden_input = hidden_input(form_assoc, :delete)
-          content_tag(wrapper_tag, [hidden_input], wrapper_attrs)
-        else
-          content_tag(wrapper_tag, [fun.(form_assoc)], wrapper_attrs)
-        end
+        fields_for_association(form_assoc, fun, wrapper_tag, wrapper_attrs, only_mark_deleted)
       end),
       content_tag(wrapper_tag, [],
         id: "dynamic_info_#{association}",
         style: "display: none;",
         data: [
-          assoc: [template: html_template, id: form_template.id, name: form_template.name],
+          assoc: [
+            template: html_template,
+            id: form_template.id,
+            name: form_template.name,
+            only_mark_deleted: only_mark_deleted
+          ],
           assoc: association
         ]
       )
     ]
+  end
+
+  defp fields_for_association(
+         %Phoenix.HTML.Form{params: %{"delete" => "true"}} = form,
+         fun,
+         wrapper_tag,
+         wrapper_attrs,
+         true
+       ) do
+    wrapper_attrs = Keyword.update(wrapper_attrs, :class, "", &(&1 <> " deleted-fields"))
+    hidden_input = hidden_input(form, :delete)
+    content_tag(wrapper_tag, [fun.(form), hidden_input], wrapper_attrs)
+  end
+
+  defp fields_for_association(
+         %Phoenix.HTML.Form{params: %{"delete" => "true"}} = form,
+         _fun,
+         wrapper_tag,
+         wrapper_attrs,
+         _only_mark_deleted
+       ) do
+    wrapper_attrs = Keyword.update(wrapper_attrs, :class, "", &(&1 <> " deleted-fields"))
+    wrapper_attrs = Keyword.put(wrapper_attrs, :style, "display: none;")
+    hidden_input = hidden_input(form, :delete)
+    content_tag(wrapper_tag, [hidden_input], wrapper_attrs)
+  end
+
+  defp fields_for_association(form, fun, wrapper_tag, wrapper_attrs, _only_mark_deleted) do
+    content_tag(wrapper_tag, [fun.(form)], wrapper_attrs)
   end
 
   @doc """

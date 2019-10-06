@@ -65,9 +65,12 @@
       input.name = input.name.replace(LAST_NUMBER, index);
       input.value = "true";
 
-      wrapperElement.innerHTML = "";
+      if (infoElement.getAttribute("data-assoc-only-mark-deleted") == "false") {
+        wrapperElement.innerHTML = "";
+        wrapperElement.style.display = "none";
+      }
       wrapperElement.appendChild(input);
-      wrapperElement.style.display = "none";
+      wrapperElement.classList.add("deleted-fields");
 
       var customEvent = new CustomEvent("dynamic:deleteFields", {
         bubbles: true,

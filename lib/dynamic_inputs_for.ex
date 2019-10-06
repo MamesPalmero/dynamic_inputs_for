@@ -54,7 +54,14 @@ defmodule DynamicInputsFor do
     [
       inputs_for(form, association, options, fn form_assoc ->
         wrapper_attrs = Keyword.put(wrapper_attrs, :data_assoc_index, form_assoc.index)
-        content_tag(wrapper_tag, [fun.(form_assoc)], wrapper_attrs)
+
+        if form_assoc.params["delete"] == "true" do
+          wrapper_attrs = Keyword.put(wrapper_attrs, :style, "display: none;")
+          hidden_input = hidden_input(form_assoc, :delete)
+          content_tag(wrapper_tag, [hidden_input], wrapper_attrs)
+        else
+          content_tag(wrapper_tag, [fun.(form_assoc)], wrapper_attrs)
+        end
       end),
       content_tag(wrapper_tag, [],
         id: "dynamic_info_#{association}",
@@ -86,6 +93,27 @@ defmodule DynamicInputsFor do
       :button,
       content,
       Keyword.merge(attrs, type: "button", data_assoc: association, data_assoc_add: "")
+    )
+  end
+
+  @doc """
+  Creates a button to mark association for deletion. When the button is pressed, a hidden input
+  called `delete` is created and set to `"true"`. For this button to work, it must be called within
+  the function that is passed to `dynamic_inputs_for/4`.
+  """
+  def dynamic_button_to_delete(content) do
+    dynamic_button_to_delete(content, [])
+  end
+
+  def dynamic_button_to_delete(attrs, do: block) when is_list(attrs) do
+    dynamic_button_to_delete(block, attrs)
+  end
+
+  def dynamic_button_to_delete(content, attrs) when is_list(attrs) do
+    content_tag(
+      :button,
+      content,
+      Keyword.merge(attrs, type: "button", data_assoc_delete: "")
     )
   end
 end

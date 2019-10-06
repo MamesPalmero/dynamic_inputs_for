@@ -42,7 +42,7 @@
 
       infoElement.parentElement.insertBefore(template, infoElement);
 
-      var customEvent = new CustomEvent("dynamic:addFields", {
+      var customEvent = new CustomEvent("dynamic:addedFields", {
         bubbles: true,
         cancelable: true
       });
@@ -72,7 +72,7 @@
       wrapperElement.appendChild(input);
       wrapperElement.classList.add("deleted-fields");
 
-      var customEvent = new CustomEvent("dynamic:deleteFields", {
+      var customEvent = new CustomEvent("dynamic:deletedFields", {
         bubbles: true,
         cancelable: true
       });

@@ -120,3 +120,27 @@ you pass to `dynamic_inputs_for`. In the previous example `%Product{name: "ASDF"
 ```eex
 <%= dynamic_inputs_for f, :products, %Product{name: "ASDF"}, fn f_product -> %>
 ```
+
+## Custom JavaScript events
+
+When you add or delete an element, the events `dynamic:addedFields` and
+`dynamic:deletedFields` are triggered. These events can be listened to modify the
+nested fields or integrate them with third party javascript libraries.
+
+```js
+document.addEventListener(
+  "dynamic:addFields",
+  function(e) {
+    e.target.style.backgroundColor = "red";
+  },
+  false
+);
+```
+
+or if you use jQuery
+
+```js
+$(document).on("dynamic:addFields", e => {
+  e.target.style.backgroundColor = "red";
+});
+```

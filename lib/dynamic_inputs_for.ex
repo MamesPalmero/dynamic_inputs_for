@@ -107,7 +107,7 @@ defmodule DynamicInputsFor do
   end
 
   @doc """
-  Creates a button to add more nested fields to the fields generated with `dynamic_inputs_for/4`.
+  Creates a button to add more nested fields to the fields generated with `dynamic_inputs_for/5`.
   """
   def dynamic_add_button(association, content)
       when is_atom(association) or is_binary(association) do
@@ -131,7 +131,7 @@ defmodule DynamicInputsFor do
   @doc """
   Creates a button to mark association for deletion. When the button is pressed, a hidden input
   called `delete` is created and set to `"true"`. For this button to work, it must be called within
-  the function that is passed to `dynamic_inputs_for/4`.
+  the function that is passed to `dynamic_inputs_for/5`.
   """
   def dynamic_delete_button(content) do
     dynamic_delete_button(content, [])

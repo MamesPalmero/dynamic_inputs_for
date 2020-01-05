@@ -10,7 +10,8 @@ defmodule DynamicInputsFor.MixProject do
       deps: deps(),
       name: "DynamicInputsFor",
       description: "Phoenix view functions to add dynamism to forms with nested fields",
-      package: package()
+      package: package(),
+      docs: docs()
     ]
   end
 
@@ -24,7 +25,8 @@ defmodule DynamicInputsFor.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:phoenix_html, "~> 2.13.3"}
+      {:phoenix_html, "~> 2.13.3"},
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false}
     ]
   end
 
@@ -33,6 +35,14 @@ defmodule DynamicInputsFor.MixProject do
       licenses: ["MIT"],
       links: %{github: "https://github.com/MamesPalmero/dynamic_inputs_for"},
       files: ~w(lib priv LICENSE mix.exs package.json README.md)
+    ]
+  end
+
+  defp docs do
+    [
+      main: "DynamicInputsFor",
+      source_url: "https://github.com/MamesPalmero/dynamic_inputs_for",
+      extras: ["README.md"]
     ]
   end
 end

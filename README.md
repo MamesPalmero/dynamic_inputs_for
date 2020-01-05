@@ -1,7 +1,7 @@
 # DynamicInputsFor
 
 Dynamically add/remove nested fields to your Phoenix forms from the client with a
-thin JavaScript layer (WIP).
+thin JavaScript layer.
 
 ## Installation
 
@@ -10,10 +10,7 @@ thin JavaScript layer (WIP).
 
 ```elixir
 def deps do
-  [
-    {:dynamic_inputs_for,
-     git: "https://github.com/MamesPalmero/dynamic_inputs_for.git", branch: "master"}
-  ]
+  [{:dynamic_inputs_for, "~> 1.0.0"}]
 end
 ```
 

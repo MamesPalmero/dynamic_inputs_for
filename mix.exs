@@ -1,10 +1,12 @@
 defmodule DynamicInputsFor.MixProject do
   use Mix.Project
 
+  @version "1.0.0"
+
   def project do
     [
       app: :dynamic_inputs_for,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -41,6 +43,7 @@ defmodule DynamicInputsFor.MixProject do
   defp docs do
     [
       main: "DynamicInputsFor",
+      source_ref: "v#{@version}",
       source_url: "https://github.com/MamesPalmero/dynamic_inputs_for",
       extras: ["README.md"]
     ]

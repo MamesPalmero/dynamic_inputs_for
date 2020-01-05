@@ -17,7 +17,7 @@ defmodule DynamicInputsFor do
   It works like `Phoenix.HTML.Form.inputs_for/4`, but it also returns an HTML tag with the
   information needed to add and delete fields from the client. The template argument is used to
   generate the new nested fields.
-  The `dynamic_button_to_add/3` function generates the button to add the fields.
+  The `dynamic_add_button/3` function generates the button to add the fields.
 
   ## Options
 
@@ -109,17 +109,17 @@ defmodule DynamicInputsFor do
   @doc """
   Creates a button to add more nested fields to the fields generated with `dynamic_inputs_for/4`.
   """
-  def dynamic_button_to_add(association, content)
+  def dynamic_add_button(association, content)
       when is_atom(association) or is_binary(association) do
-    dynamic_button_to_add(association, content, [])
+    dynamic_add_button(association, content, [])
   end
 
-  def dynamic_button_to_add(association, attrs, do: block)
+  def dynamic_add_button(association, attrs, do: block)
       when (is_atom(association) or is_binary(association)) and is_list(attrs) do
-    dynamic_button_to_add(association, block, attrs)
+    dynamic_add_button(association, block, attrs)
   end
 
-  def dynamic_button_to_add(association, content, attrs)
+  def dynamic_add_button(association, content, attrs)
       when (is_atom(association) or is_binary(association)) and is_list(attrs) do
     content_tag(
       :button,
@@ -133,15 +133,15 @@ defmodule DynamicInputsFor do
   called `delete` is created and set to `"true"`. For this button to work, it must be called within
   the function that is passed to `dynamic_inputs_for/4`.
   """
-  def dynamic_button_to_delete(content) do
-    dynamic_button_to_delete(content, [])
+  def dynamic_delete_button(content) do
+    dynamic_delete_button(content, [])
   end
 
-  def dynamic_button_to_delete(attrs, do: block) when is_list(attrs) do
-    dynamic_button_to_delete(block, attrs)
+  def dynamic_delete_button(attrs, do: block) when is_list(attrs) do
+    dynamic_delete_button(block, attrs)
   end
 
-  def dynamic_button_to_delete(content, attrs) when is_list(attrs) do
+  def dynamic_delete_button(content, attrs) when is_list(attrs) do
     content_tag(
       :button,
       content,

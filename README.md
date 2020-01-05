@@ -60,14 +60,14 @@ end
 ```
 
 If you want to be able to dynamically add products in a form, use the
-`dynamic_inputs_for` helper in combination with `dynamic_button_to_add` to generate
+`dynamic_inputs_for` helper in combination with `dynamic_add_button` to generate
 the form.
 
 If you also want to allow the deletion of nested fields, this library follows the
 strategy suggested in the
 [Ecto.Changeset](https://hexdocs.pm/ecto/Ecto.Changeset.html) documentation. Add a
 separate boolean virtual field to the changeset function that will allow you to
-manually mark the associated data for deletion and use the `dynamic_button_to_delete`
+manually mark the associated data for deletion and use the `dynamic_delete_button`
 helper inside the function that you pass to `dynamic_inputs_for` to generate a delete
 button for each associated data.
 
@@ -107,10 +107,10 @@ end
   <%= dynamic_inputs_for f, :products, %Product{}, fn f_product -> %>
     <%= text_input f_product, :name %>
 
-    <%= dynamic_button_to_delete("Delete") %>
+    <%= dynamic_delete_button("Delete") %>
   <% end%>
 
-  <%= dynamic_button_to_add :products, "Add" %>
+  <%= dynamic_add_button :products, "Add" %>
 <% end %>
 ```
 

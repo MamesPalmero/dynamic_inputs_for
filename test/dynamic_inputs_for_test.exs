@@ -87,25 +87,25 @@ defmodule DynamicInputsForTest do
     end
   end
 
-  test "dynamic_button_to_add" do
-    assert dynamic_button_to_add(:products, "Add") |> safe_to_string() ==
+  test "dynamic_add_button" do
+    assert dynamic_add_button(:products, "Add") |> safe_to_string() ==
              "<button data-assoc=\"products\" data-assoc-add=\"\" type=\"button\">Add</button>"
 
-    assert dynamic_button_to_add(:products, [class: "button"], do: "Add") |> safe_to_string() ==
+    assert dynamic_add_button(:products, [class: "button"], do: "Add") |> safe_to_string() ==
              "<button class=\"button\" data-assoc=\"products\" data-assoc-add=\"\" type=\"button\">Add</button>"
 
-    assert dynamic_button_to_add(:products, "Add", class: "button") |> safe_to_string() ==
+    assert dynamic_add_button(:products, "Add", class: "button") |> safe_to_string() ==
              "<button class=\"button\" data-assoc=\"products\" data-assoc-add=\"\" type=\"button\">Add</button>"
   end
 
-  test "dynamic_button_to_delete" do
-    assert dynamic_button_to_delete("Remove") |> safe_to_string() ==
+  test "dynamic_delete_button" do
+    assert dynamic_delete_button("Remove") |> safe_to_string() ==
              "<button data-assoc-delete=\"\" type=\"button\">Remove</button>"
 
-    assert dynamic_button_to_delete([class: "button"], do: "Remove") |> safe_to_string() ==
+    assert dynamic_delete_button([class: "button"], do: "Remove") |> safe_to_string() ==
              "<button class=\"button\" data-assoc-delete=\"\" type=\"button\">Remove</button>"
 
-    assert dynamic_button_to_delete("Remove", class: "button") |> safe_to_string() ==
+    assert dynamic_delete_button("Remove", class: "button") |> safe_to_string() ==
              "<button class=\"button\" data-assoc-delete=\"\" type=\"button\">Remove</button>"
   end
 end

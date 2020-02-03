@@ -126,7 +126,7 @@ nested fields or integrate them with third party javascript libraries.
 
 ```js
 document.addEventListener(
-  "dynamic:addFields",
+  "dynamic:addedFields",
   function(e) {
     e.target.style.backgroundColor = "red";
   },
@@ -137,7 +137,7 @@ document.addEventListener(
 or if you use jQuery
 
 ```js
-$(document).on("dynamic:addFields", e => {
+$(document).on("dynamic:addedFields", e => {
   e.target.style.backgroundColor = "red";
 });
 ```

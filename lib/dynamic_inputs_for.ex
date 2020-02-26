@@ -25,6 +25,11 @@ defmodule DynamicInputsFor do
 
     * `:wrapper_attrs` - HTML attributes for the wrapper.
 
+    * `:association_alias` - the name to be used in the form to generate the id of the element
+      that has the template and is used to generate the fields, defaults the name of the
+      association. It is usable to avoid conflicts with repeated ids when an association is
+      called several times or there are different associations with the same name.
+
     * `:only_mark_deleted` - create an input called `delete` with `"true"` value and add the
       `deleted-fields` class to the wrapper to choose how to handle after validation errors. By
       default when a group of nested inputs is deleted the content is deleted, to avoid HTML
@@ -37,9 +42,10 @@ defmodule DynamicInputsFor do
     {wrapper_attrs, options} = Keyword.pop(options, :wrapper_attrs, [])
     {wrapper_tag, options} = Keyword.pop(options, :wrapper_tag, :div)
     {only_mark_deleted, options} = Keyword.pop(options, :only_mark_deleted, false)
+    {association_alias, options} = Keyword.pop(options, :association_alias, association)
 
     wrapper_attrs = Keyword.update(wrapper_attrs, :class, "fields", &("fields " <> &1))
-    wrapper_attrs = Keyword.put(wrapper_attrs, :data_assoc, association)
+    wrapper_attrs = Keyword.put(wrapper_attrs, :data_assoc, association_alias)
 
     # Remove the parameters of the form to force that the prepended values are always rendered
     form_template =
@@ -62,7 +68,7 @@ defmodule DynamicInputsFor do
         fields_for_association(form_assoc, fun, wrapper_tag, wrapper_attrs, only_mark_deleted)
       end),
       content_tag(wrapper_tag, [],
-        id: "dynamic_info_#{association}",
+        id: "dynamic_info_#{association_alias}",
         style: "display: none;",
         data: [
           assoc: [
@@ -71,7 +77,7 @@ defmodule DynamicInputsFor do
             name: form_template.name,
             only_mark_deleted: only_mark_deleted
           ],
-          assoc: association
+          assoc: association_alias
         ]
       )
     ]

@@ -80,6 +80,20 @@ defmodule DynamicInputsForTest do
                ~s(<div class=\"fields fake-class\" data-assoc=\"products\" data-assoc-index=\"0\"><input id=\"shop_products_0_name\")
     end
 
+    test "with :association_alias, the id of HTML element with the template and the data-assoc attributes change" do
+      contents =
+        safe_dynamic_form(conn(),
+          default: [%Product{name: "asdf"}],
+          association_alias: :products_alias
+        )
+
+      assert contents =~
+               ~s(<div class=\"fields\" data-assoc=\"products_alias\" data-assoc-index=\"0\">)
+
+      assert contents =~ ~s(<div data-assoc=\"products_alias\" data-assoc-id=\"shop_products_0\")
+      assert contents =~ ~s(id=\"dynamic_info_products_alias\" style=\"display: none;\">)
+    end
+
     test "without :only_mark_deleted, if fields are marked for deletion, only render input \"delete\"" do
       contents =
         params_deleted_products()

@@ -14,7 +14,7 @@ defmodule DynamicInputsForTest do
     Plug.Test.conn(:get, "/forms", params)
   end
 
-  defp dynamic_form(conn, opts \\ []) do
+  defp safe_dynamic_form(conn, opts \\ []) do
     opts = Keyword.put_new(opts, :default, [])
 
     form_for(conn, "/", [as: :shop], fn form ->
@@ -40,49 +40,63 @@ defmodule DynamicInputsForTest do
 
   describe "dynamic_inputs_for/5" do
     test "generate an HTML element with the template and information for the new fields" do
-      assert dynamic_form(conn()) =~ ~s(data-assoc=\"products\")
-      assert dynamic_form(conn()) =~ ~s(data-assoc-id=\"shop_products_0\")
-      assert dynamic_form(conn()) =~ ~s(data-assoc-name=\"shop[products][0]\")
-      assert dynamic_form(conn()) =~ ~s(data-assoc-only-mark-deleted=\"false\")
-      assert dynamic_form(conn()) =~ ~s(id=\"dynamic_info_products\")
-      assert dynamic_form(conn()) =~ ~s(style=\"display: none;\")
+      contents = safe_dynamic_form(conn())
 
-      assert dynamic_form(conn()) =~
+      assert contents =~ ~s(data-assoc=\"products\")
+      assert contents =~ ~s(data-assoc-id=\"shop_products_0\")
+      assert contents =~ ~s(data-assoc-name=\"shop[products][0]\")
+      assert contents =~ ~s(data-assoc-only-mark-deleted=\"false\")
+      assert contents =~ ~s(id=\"dynamic_info_products\")
+      assert contents =~ ~s(style=\"display: none;\")
+
+      assert contents =~
                ~s(data-assoc-template=\"&lt;div class=&quot;fields&quot; data-assoc=&quot;products&quot;&gt;&lt;input id=&quot;shop_products_0_name&quot; name=&quot;shop[products][0][name]&quot; type=&quot;text&quot;&gt;&lt;/div&gt;\")
     end
 
     test "wrap nested fields in the class \"fields\"" do
-      assert dynamic_form(conn(), default: [%Product{name: "asdf"}]) =~
+      contents = safe_dynamic_form(conn(), default: [%Product{name: "asdf"}])
+
+      assert contents =~
                ~s(<div class=\"fields\" data-assoc=\"products\" data-assoc-index=\"0\"><input id=\"shop_products_0_name\" name=\"shop[products][0][name]\" type=\"text\" value=\"asdf\"></div>)
     end
 
-    test "wrap in the given HTML tag" do
-      assert dynamic_form(conn(), default: [%Product{name: "asdf"}], wrapper_tag: :span) =~
+    test "with :wrapper_tag, wrap nested fields in the given HTML tag" do
+      contents = safe_dynamic_form(conn(), default: [%Product{name: "asdf"}], wrapper_tag: :span)
+
+      assert contents =~
                ~s(<span class=\"fields\" data-assoc=\"products\" data-assoc-index=\"0\"><input id=\"shop_products_0_name\")
 
-      assert dynamic_form(conn(), default: [%Product{name: "asdf"}], wrapper_tag: :span) =~
-               ~s(<span data-assoc=\"products\" data-assoc-id=\"shop_products_0\")
+      assert contents =~ ~s(<span data-assoc=\"products\" data-assoc-id=\"shop_products_0\")
     end
 
-    test "add the attributes given in the wrapper" do
-      assert dynamic_form(conn(),
-               default: [%Product{name: "asdf"}],
-               wrapper_attrs: [class: "fake-class"]
-             ) =~
+    test "with :wrapper_attrs, add the attributes given in the wrapper" do
+      contents =
+        safe_dynamic_form(conn(),
+          default: [%Product{name: "asdf"}],
+          wrapper_attrs: [class: "fake-class"]
+        )
+
+      assert contents =~
                ~s(<div class=\"fields fake-class\" data-assoc=\"products\" data-assoc-index=\"0\"><input id=\"shop_products_0_name\")
     end
 
-    test "if fields are marked for deletion only render input \"delete\"" do
-      conn = conn(params_deleted_products())
+    test "without :only_mark_deleted, if fields are marked for deletion, only render input \"delete\"" do
+      contents =
+        params_deleted_products()
+        |> conn()
+        |> safe_dynamic_form()
 
-      assert dynamic_form(conn) =~
+      assert contents =~
                ~s(<div class=\"fields deleted-fields\" data-assoc=\"products\" data-assoc-index=\"0\" style=\"display: none;\"><input id=\"shop_products_0_delete\" name=\"shop[products][0][delete]\" type=\"hidden\" value=\"true\">)
     end
 
-    test "if fields are marked for deletion, \"only_mark_deleted\" option render everything" do
-      conn = conn(params_deleted_products())
+    test "with :only_mark_deleted, if fields are marked for deletion, render everything" do
+      contents =
+        params_deleted_products()
+        |> conn()
+        |> safe_dynamic_form(only_mark_deleted: true)
 
-      assert dynamic_form(conn, only_mark_deleted: true) =~
+      assert contents =~
                ~s(<div class=\"fields deleted-fields\" data-assoc=\"products\" data-assoc-index=\"0\"><input id=\"shop_products_0_name\" name=\"shop[products][0][name]\" type=\"text\" value=\"wer\">)
     end
   end

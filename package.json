@@ -1,7 +1,7 @@
 {
   "name": "dynamic_inputs_for",
-  "version": "1.0.0",
-  "description": "** TODO: Add description **",
+  "version": "1.1.0",
+  "description": "Client for the dynamic_inputs_for package",
   "main": "./priv/static/dynamic_inputs_for.js",
   "repository": {
     "type": "git",

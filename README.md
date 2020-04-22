@@ -10,7 +10,7 @@ thin JavaScript layer.
 
 ```elixir
 def deps do
-  [{:dynamic_inputs_for, "~> 1.0.0"}]
+  [{:dynamic_inputs_for, "~> 1.1.0"}]
 end
 ```
 
